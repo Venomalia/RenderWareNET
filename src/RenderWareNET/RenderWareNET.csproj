@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Title>RenderWareNET</Title>
+	<Version>0.6.0.0</Version>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageIcon>Icon.png</PackageIcon>
+    <Description>Library to work with RenderWare 3 formats</Description>
+    <Authors>Venomalia</Authors>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageTags>RenderWare Engine</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/Venomalia/RenderWareNET</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Venomalia/RenderWareNET</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AuroraLib.Core" Version="1.1.1" />
+  </ItemGroup>
+
+</Project>
