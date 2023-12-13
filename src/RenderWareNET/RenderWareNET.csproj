@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Title>RenderWareNET</Title>
-	<Version>0.6.0.0</Version>
+	<Version>0.6.1.0</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
@@ -18,6 +18,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/Venomalia/RenderWareNET</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Venomalia/RenderWareNET</PackageProjectUrl>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AuroraLib.Core" Version="1.1.1" />
+    <PackageReference Include="AuroraLib.Core" Version="1.3.3" />
   </ItemGroup>
 
 </Project>

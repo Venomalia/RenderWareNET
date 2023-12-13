@@ -12,7 +12,7 @@ namespace RenderWareNET.Structs
             Max = max;
         }
 
-        public Vector3 GetCenter()
+        public readonly Vector3 GetCenter()
         {
             return (Min + Max) * 0.5f;
         }
