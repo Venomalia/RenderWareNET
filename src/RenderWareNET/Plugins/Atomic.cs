@@ -26,13 +26,13 @@ namespace RenderWareNET.Plugins
         protected override void ReadData(Stream stream)
         {
             Properties = stream.Read<RWAtomic>();
-            Extension.Read(stream);
+            Extension.BinaryDeserialize(stream);
         }
 
         protected override void WriteData(Stream stream)
         {
             stream.Write(Properties);
-            Extension.Write(stream);
+            Extension.BinarySerialize(stream);
         }
 
         protected override PluginID GetExpectedIdentifier()

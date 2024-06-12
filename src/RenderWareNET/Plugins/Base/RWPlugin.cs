@@ -4,6 +4,7 @@ using AuroraLib.Core.IO;
 using RenderWareNET.Enums;
 using RenderWareNET.Interfaces;
 using RenderWareNET.Structs;
+using System.ComponentModel;
 
 namespace RenderWareNET.Plugins.Base
 {
@@ -12,73 +13,88 @@ namespace RenderWareNET.Plugins.Base
     /// </summary>
     public abstract class RWPlugin : IRWSectionAccess
     {
+        /// <inheritdoc/>
         public RWPluginHeader Header { get; set; }
 
         public RWPlugin() : this(new RWVersion())
         { }
 
-        public RWPlugin(Stream stream)
-            => Read(stream);
+        public RWPlugin(Stream source)
+            => BinaryDeserialize(source);
 
         public RWPlugin(RWVersion version) : base()
             => Header = new(GetExpectedIdentifier(), 4, version);
 
-        public virtual void Read(Stream stream)
+
+        /// <inheritdoc/>
+        public void BinaryDeserialize(Stream source)
         {
-            Header = stream.Read<RWPluginHeader>();
+            Header = source.Read<RWPluginHeader>();
             if (Header.Identifier != GetExpectedIdentifier())
             {
                 throw new InvalidIdentifierException(new Identifier32((uint)GetExpectedIdentifier()), new Identifier32((uint)Header.Identifier));
             }
-            long sectionStart = stream.Position;
+            long sectionStart = source.Position;
             long sectionEnd = sectionStart + Header.SectionSize;
-            ReadData(stream);
-            if (stream.Position != sectionEnd)
+            ReadData(source);
+            if (source.Position != sectionEnd)
             {
-                Console.Error.WriteLine($"This Plugin {Header.Identifier} was not read properly. Read until {stream.Position}-{sectionEnd}");
-                while (stream.Position < sectionEnd)
+                Console.Error.WriteLine($"This Plugin {Header.Identifier} was not read properly. Read until {source.Position}-{sectionEnd}");
+                while (source.Position < sectionEnd)
                 {
-                    RWPluginHeader test = stream.Read<RWPluginHeader>();
+                    RWPluginHeader test = source.Read<RWPluginHeader>();
                     if (test.Version != Header.Version)
                     {
                         break;
                     }
 
-                    Console.Error.WriteLine($"Sub Plugin {test.Identifier} found, At {stream.Position}, Size {test.SectionSize} was not read.");
-                    stream.Seek(test.SectionSize, SeekOrigin.Current);
+                    Console.Error.WriteLine($"Sub Plugin {test.Identifier} found, At {source.Position}, Size {test.SectionSize} was not read.");
+                    source.Seek(test.SectionSize, SeekOrigin.Current);
                 }
 
-                stream.Seek(sectionEnd, SeekOrigin.Begin);
+                source.Seek(sectionEnd, SeekOrigin.Begin);
             }
         }
 
-        public virtual void Write(Stream stream)
+        /// <inheritdoc/>
+        public void BinarySerialize(Stream dest)
         {
-            stream.Write(Header);
-            long sectionStart = stream.Position;
-            WriteData(stream);
-            int sectionSize = (int)(stream.Position - sectionStart);
-            stream.At(sectionStart - 8, s => s.Write(sectionSize));
+            dest.Write(Header);
+            long sectionStart = dest.Position;
+            WriteData(dest);
+            int sectionSize = (int)(dest.Position - sectionStart);
+            dest.At(sectionStart - 8, s => s.Write(sectionSize));
         }
+
+        /// <inheritdoc/>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("deprecated, please use BinaryDeserialize instead.")]
+        public void Read(Stream source)
+            => BinaryDeserialize(source);
+
+        /// <inheritdoc/>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("deprecated, please use BinarySerialize instead.")]
+        public void Write(Stream dest)
+            => BinarySerialize(dest);
 
         /// <summary>
         /// Reads the specific section data from the given stream.
         /// </summary>
-        /// <param name="stream">The stream from which the section data is read.</param>
-        protected abstract void ReadData(Stream stream);
+        /// <param name="source">The stream from which the section data is read.</param>
+        protected abstract void ReadData(Stream source);
 
         /// <summary>
         /// Writes the specific section data to the given stream.
         /// </summary>
-        /// <param name="stream">The stream to which the section data is written.</param>
-        protected abstract void WriteData(Stream stream);
+        /// <param name="dest">The stream to which the section data is written.</param>
+        protected abstract void WriteData(Stream dest);
 
         /// <summary>
         /// Gets the expected identifier for this plugin.
         /// </summary>
         /// <returns>The expected identifier.</returns>
         protected abstract PluginID GetExpectedIdentifier();
-
 
         public static implicit operator RWPluginHeader(RWPlugin x) => x.Header;
         public static implicit operator RWVersion(RWPlugin x) => x.Header.Version;

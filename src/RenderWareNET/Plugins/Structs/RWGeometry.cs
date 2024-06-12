@@ -13,7 +13,7 @@ namespace RenderWareNET.Plugins.Structs
 
         public int NumTriangles => Triangles.Length;
         public int NumVertices;
-        public int NumMorphTargets => MorphTargets.Length;
+        public int NumMorphTargets => MorphTargets.Count;
 
         public SurfaceProperties Surface;
 
@@ -21,7 +21,7 @@ namespace RenderWareNET.Plugins.Structs
         public Vector2[] TextCoords = Array.Empty<Vector2>();
         public Vector2[] TextCoords2 = Array.Empty<Vector2>();
         public Triangle[] Triangles = Array.Empty<Triangle>();
-        public MorphTarget[] MorphTargets = Array.Empty<MorphTarget>();
+        public readonly List<MorphTarget> MorphTargets = new();
 
         public RWGeometry() : base()
         { }
@@ -35,6 +35,7 @@ namespace RenderWareNET.Plugins.Structs
 
         protected override void ReadData(Stream stream)
         {
+            MorphTargets.Clear();
             GeometryFlag = stream.Read<GeometryAttributes>();
 
             int numTriangles = stream.Read<int>();
@@ -48,29 +49,28 @@ namespace RenderWareNET.Plugins.Structs
 
             if ((GeometryFlag & GeometryAttributes.NativeGeometry) != 0)
             {
-                MorphTargets = new[] { new MorphTarget(stream) };
+                MorphTargets.Add(new MorphTarget(stream));
                 return;
             }
 
+            VertexColors = new RGBA32[NumVertices];
             if ((GeometryFlag & GeometryAttributes.VertexColors) != 0)
-            {
-                VertexColors = stream.Read<RGBA32>(NumVertices);
-            }
+                stream.Read<RGBA32>(VertexColors);
 
+            TextCoords = new Vector2[NumVertices];
             if ((GeometryFlag & GeometryAttributes.TextCoords) != 0)
-            {
-                TextCoords = stream.Read<Vector2>(NumVertices);
-            }
-            if ((GeometryFlag & GeometryAttributes.MultipleTextCoords) != 0)
-            {
-                TextCoords2 = stream.Read<Vector2>(NumVertices);
-            }
+                stream.Read<Vector2>(TextCoords);
 
-            Triangles = stream.Read<Triangle>(numTriangles);
+            TextCoords2 = new Vector2[NumVertices];
+            if ((GeometryFlag & GeometryAttributes.MultipleTextCoords) != 0)
+                stream.Read<Vector2>(TextCoords2);
+
+            Triangles = new Triangle[numTriangles];
+            stream.Read<Triangle>(Triangles);
             ReversTriangle(Triangles);
 
-            MorphTargets = new MorphTarget[numMorphTargets];
-            for (int i = 0; i < MorphTargets.Length; i++)
+            MorphTargets.Capacity = numMorphTargets;
+            for (int i = 0; i < numMorphTargets; i++)
             {
                 MorphTargets[i] = new(stream, NumVertices);
             }
@@ -91,7 +91,7 @@ namespace RenderWareNET.Plugins.Structs
 
             if ((GeometryFlag & GeometryAttributes.NativeGeometry) != 0)
             {
-                MorphTargets[0].Writer(stream);
+                MorphTargets[0].BinarySerialize(stream);
                 return;
             }
 
@@ -113,9 +113,9 @@ namespace RenderWareNET.Plugins.Structs
             ReversTriangle(Buffer);
             stream.Write<Triangle>(Triangles);
 
-            for (int i = 0; i < MorphTargets.Length; i++)
+            for (int i = 0; i < MorphTargets.Count; i++)
             {
-                MorphTargets[i].Writer(stream);
+                MorphTargets[i].BinarySerialize(stream);
             }
         }
 

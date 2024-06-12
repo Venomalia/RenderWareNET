@@ -1,20 +1,20 @@
-﻿namespace RenderWareNET.Interfaces
+﻿using AuroraLib.Core.Interfaces;
+using System.ComponentModel;
+
+namespace RenderWareNET.Interfaces
 {
     /// <summary>
     /// Represents an interface for reading and writing RenderWare sections of data from and to a stream.
     /// </summary>
-    public interface IRWSectionAccess : IHasRWPluginHeader
+    public interface IRWSectionAccess : IHasRWPluginHeader, IBinaryObject
     {
-        /// <summary>
-        /// Reads the section from the given stream.
-        /// </summary>
-        /// <param name="stream">The stream from which the section data is read.</param>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("deprecated, please use BinaryDeserialize instead.")]
         void Read(Stream stream);
 
-        /// <summary>
-        /// Writes the section to the given stream.
-        /// </summary>
-        /// <param name="stream">The stream to which the section data is written.</param>
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("deprecated, please use BinarySerialize instead.")]
         void Write(Stream stream);
     }
 

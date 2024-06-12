@@ -19,7 +19,10 @@ namespace RenderWareNET.Plugins
         { }
 
         protected override void ReadData(Stream stream)
-            => RawData = stream.Read(Header.SectionSize);
+        {
+            RawData = new byte[Header.SectionSize];
+            stream.Read(RawData);
+        }
 
         protected override void WriteData(Stream stream)
             => stream.Write(RawData);

@@ -34,10 +34,10 @@ namespace RenderWareNET.Plugins.Structs
             => Value = data;
 
         protected override void ReadData(Stream stream)
-            => data = stream.ReadString((int)Header.SectionSize);
+            => data = stream.ReadString((int)Header.SectionSize, 0);
 
         protected override void WriteData(Stream stream)
-            => stream.WriteString(data, (int)Header.SectionSize);
+            => stream.WriteString(data, (int)Header.SectionSize, 0);
 
         protected override PluginID GetExpectedIdentifier()
             => PluginID.String;

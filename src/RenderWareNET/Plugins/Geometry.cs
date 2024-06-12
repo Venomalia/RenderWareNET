@@ -22,16 +22,16 @@ namespace RenderWareNET.Plugins
 
         protected override void ReadData(Stream stream)
         {
-            Properties.Read(stream);
-            Materials.Read(stream);
-            Extension.Read(stream);
+            Properties.BinaryDeserialize(stream);
+            Materials.BinaryDeserialize(stream);
+            Extension.BinaryDeserialize(stream);
         }
 
         protected override void WriteData(Stream stream)
         {
-            Properties.Write(stream);
-            Materials.Write(stream);
-            Extension.Write(stream);
+            Properties.BinarySerialize(stream);
+            Materials.BinaryDeserialize(stream);
+            Extension.BinaryDeserialize(stream);
         }
 
         protected override PluginID GetExpectedIdentifier()

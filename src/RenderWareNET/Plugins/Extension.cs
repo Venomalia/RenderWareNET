@@ -38,11 +38,11 @@ namespace RenderWareNET.Plugins
             }
         }
 
-        protected override void WriteData(Stream stream)
+        protected override void WriteData(Stream dest)
         {
             foreach (IRWSectionAccess section in Sections)
             {
-                section.Write(stream);
+                section.BinarySerialize(dest);
             }
         }
 

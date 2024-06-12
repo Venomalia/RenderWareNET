@@ -1,9 +1,10 @@
-﻿using AuroraLib.Core.IO;
+﻿using AuroraLib.Core.Interfaces;
+using AuroraLib.Core.IO;
 using System.Numerics;
 
 namespace RenderWareNET.Structs
 {
-    public class MorphTarget
+    public class MorphTarget : IBinaryObject
     {
         public Sphere Sphere;
         public bool HasVertices { get => Vertices.Length != 0; }
@@ -19,23 +20,36 @@ namespace RenderWareNET.Structs
             Normals = normals ?? Array.Empty<Vector3>();
         }
 
-        public MorphTarget(Stream stream, int vertices = 0)
-        {
-            Sphere = stream.Read<Sphere>();
-            int hasVertices = stream.Read<int>();
-            int hasNormals = stream.Read<int>();
+        public MorphTarget(Stream source, int vertices = 0)
+            => BinaryDeserialize(source, vertices);
 
-            Vertices = hasVertices != 0 ? stream.Read<Vector3>(vertices) : Array.Empty<Vector3>();
-            Normals = hasNormals != 0 ? stream.Read<Vector3>(vertices) : Array.Empty<Vector3>();
+        /// <inheritdoc/>
+        public void BinaryDeserialize(Stream source)
+            => BinaryDeserialize(source, 0);
+
+        /// <inheritdoc cref="BinaryDeserialize(Stream)"/>
+        public void BinaryDeserialize(Stream source, int vertices)
+        {
+            Sphere = source.Read<Sphere>();
+            bool hasVertices = source.Read<int>() != 0;
+            bool hasNormals = source.Read<int>() != 0;
+
+            Vertices = new Vector3[vertices];
+            Normals = new Vector3[vertices];
+            if (hasVertices)
+                source.Read<Vector3>(Vertices);
+            if (hasNormals)
+                source.Read<Vector3>(Normals);
         }
 
-        public void Writer(Stream stream)
+        /// <inheritdoc/>
+        public void BinarySerialize(Stream dest)
         {
-            stream.Write(Sphere);
-            stream.Write(HasVertices ? 1 : 0);
-            stream.Write(HasNormals ? 1 : 0);
-            stream.Write<Vector3>(Vertices);
-            stream.Write<Vector3>(Normals);
+            dest.Write(Sphere);
+            dest.Write(HasVertices ? 1 : 0);
+            dest.Write(HasNormals ? 1 : 0);
+            dest.Write<Vector3>(Vertices);
+            dest.Write<Vector3>(Normals);
         }
     }
 }

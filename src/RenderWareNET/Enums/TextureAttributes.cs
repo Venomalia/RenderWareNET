@@ -127,6 +127,7 @@
             {
                 format = format.GetPixelFormat();
             }
+
             if (isGC)
             {
                 return format switch

@@ -26,7 +26,8 @@ namespace RenderWareNET.Plugins.Structs
             DataType = stream.Read<Enums.RWPlatformID>();
             HeaderLenght = stream.Read<int>();
             DataLenght = stream.Read<int>();
-            RawData = stream.Read(Header.SectionSize);
+            RawData = new byte[Header.SectionSize];
+            stream.Read(RawData);
         }
 
         protected override void WriteData(Stream stream)

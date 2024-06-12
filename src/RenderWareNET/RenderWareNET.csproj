@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Title>RenderWareNET</Title>
-	<Version>0.6.1.0</Version>
+	<Version>0.6.2.0</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
@@ -33,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AuroraLib.Core" Version="1.3.3" />
+    <PackageReference Include="AuroraLib.Core" Version="1.4.1" />
   </ItemGroup>
 
 </Project>

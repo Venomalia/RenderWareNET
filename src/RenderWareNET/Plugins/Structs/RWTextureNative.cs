@@ -143,20 +143,16 @@ namespace RenderWareNET.Plugins.Structs
             }
 
             int PaletteSize = attributes.GetPaletteByteSize();
+            TLOT = new byte[PaletteSize];
             if (PaletteSize != 0)
-            {
-                TLOT = stream.Read(PaletteSize);
-            }
-            else
-            {
-                TLOT = Array.Empty<byte>();
-            }
+                stream.Read(TLOT);
 
             if (Platform != TexturePlatformID.Xbox)
             {
                 imagesize = stream.Read<int>(endian);
             }
-            ImageData = stream.Read(imagesize);
+            ImageData = new byte[imagesize];
+            stream.Read(ImageData);
         }
 
         private void ReadPSData(Stream stream)
