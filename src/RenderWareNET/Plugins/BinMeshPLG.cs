@@ -52,6 +52,7 @@ namespace RenderWareNET.Plugins
 
         protected override void WriteData(Stream stream)
         {
+            stream.Write(Flag);
             stream.Write(Count);
             stream.Write(TotalIndicesCount);
             for (int i = 0; i < Count; i++)
