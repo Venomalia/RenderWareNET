@@ -37,7 +37,7 @@ namespace RenderWareNET.Plugins.Structs
         public void Read(Stream stream, bool isShadow)
         {
             IsShadow = isShadow;
-            Read(stream);
+            BinaryDeserialize(stream);
         }
 
         protected override void ReadData(Stream stream)

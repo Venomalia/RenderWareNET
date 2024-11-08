@@ -12,8 +12,8 @@ namespace RenderWareNET.Plugins.Structs
             get => data;
             set
             {
-                Header = new(PluginID.String, (uint)StreamEx.AlignPosition(data.Length, 4), Header.Version);
                 data = value ?? string.Empty;
+                Header = new(PluginID.String, (uint)StreamEx.AlignPosition(data.Length, 4), Header.Version);
             }
         }
         private string data = string.Empty;

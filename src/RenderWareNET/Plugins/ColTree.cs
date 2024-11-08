@@ -19,10 +19,10 @@ namespace RenderWareNET.Plugins
         { }
 
         protected override void ReadData(Stream stream)
-            => Properties.Read(stream);
+            => Properties.BinaryDeserialize(stream);
 
         protected override void WriteData(Stream stream)
-            => Properties.Write(stream);
+            => Properties.BinarySerialize(stream);
 
         protected override PluginID GetExpectedIdentifier()
             => PluginID.ColTree;

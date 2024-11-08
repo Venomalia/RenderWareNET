@@ -32,12 +32,12 @@ namespace RenderWareNET.MaterialEffects
             stream.Write(HasBumpMap ? 1 : 0);
             if (HasBumpMap)
             {
-                BumpMap?.Write(stream);
+                BumpMap?.BinarySerialize(stream);
             }
             stream.Write(HasHeightMap ? 1 : 0);
             if (HasHeightMap)
             {
-                HeightMap?.Write(stream);
+                HeightMap?.BinaryDeserialize(stream);
             }
         }
     }

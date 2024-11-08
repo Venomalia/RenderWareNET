@@ -52,8 +52,8 @@ namespace RenderWareNET.Plugins
         protected override void WriteData(Stream stream)
         {
             stream.Write(Properties);
-            Left.Write(stream);
-            Right.Write(stream);
+            Left.BinarySerialize(stream);
+            Right.BinarySerialize(stream);
         }
 
         protected override PluginID GetExpectedIdentifier()

@@ -31,7 +31,7 @@ namespace RenderWareNET.MaterialEffects
             stream.Write(HasEnvironmentMap ? 1 : 0);
             if (HasEnvironmentMap)
             {
-                EnvironmentMap?.Write(stream);
+                EnvironmentMap?.BinarySerialize(stream);
             }
         }
     }

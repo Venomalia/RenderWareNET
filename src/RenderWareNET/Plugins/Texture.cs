@@ -25,17 +25,17 @@ namespace RenderWareNET.Plugins
         protected override void ReadData(Stream stream)
         {
             Properties = stream.Read<RWTexture>();
-            DiffuseName.Read(stream);
-            AlphaName.Read(stream);
-            Extension.Read(stream);
+            DiffuseName.BinaryDeserialize(stream);
+            AlphaName.BinaryDeserialize(stream);
+            Extension.BinaryDeserialize(stream);
         }
 
         protected override void WriteData(Stream stream)
         {
             stream.Write(Properties);
-            DiffuseName.Write(stream);
-            AlphaName.Write(stream);
-            Extension.Write(stream);
+            DiffuseName.BinarySerialize(stream);
+            AlphaName.BinarySerialize(stream);
+            Extension.BinarySerialize(stream);
         }
 
         protected override PluginID GetExpectedIdentifier()

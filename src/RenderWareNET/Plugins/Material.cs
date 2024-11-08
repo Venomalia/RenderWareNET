@@ -26,9 +26,9 @@ namespace RenderWareNET.Plugins
             Properties = stream.Read<RWMaterial>();
             if (Properties.HasTexture)
             {
-                Texture.Read(stream);
+                Texture.BinaryDeserialize(stream);
             }
-            Extension.Read(stream);
+            Extension.BinaryDeserialize(stream);
         }
 
         protected override void WriteData(Stream stream)
@@ -36,9 +36,9 @@ namespace RenderWareNET.Plugins
             stream.Write(Properties);
             if (Properties.HasTexture)
             {
-                Texture.Write(stream);
+                Texture.BinarySerialize(stream);
             }
-            Extension.Write(stream);
+            Extension.BinarySerialize(stream);
         }
 
         protected override PluginID GetExpectedIdentifier()

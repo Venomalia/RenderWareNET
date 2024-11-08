@@ -12,7 +12,7 @@ namespace RenderWareNET.Plugins
         protected override void ReadData(Stream stream)
         {
             long sectionEnd = stream.Position + Header.SectionSize;
-            List.Read(stream);
+            List.BinaryDeserialize(stream);
             Materials.Clear();
             Materials.Capacity = List.Count;
 
@@ -24,10 +24,10 @@ namespace RenderWareNET.Plugins
 
         protected override void WriteData(Stream stream)
         {
-            List.Write(stream);
+            List.BinarySerialize(stream);
             foreach (Material material in Materials)
             {
-                material.Write(stream);
+                material.BinarySerialize(stream);
             }
         }
 

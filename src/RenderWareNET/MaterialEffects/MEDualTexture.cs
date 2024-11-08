@@ -32,7 +32,7 @@ namespace RenderWareNET.MaterialEffects
             stream.Write(HasTexture ? 1 : 0);
             if (HasTexture)
             {
-                Texture?.Write(stream);
+                Texture?.BinarySerialize(stream);
             }
         }
     }

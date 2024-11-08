@@ -19,10 +19,10 @@ namespace RenderWareNET.Plugins
         { }
 
         protected override void ReadData(Stream stream)
-            => NativeData.Read(stream);
+            => NativeData.BinaryDeserialize(stream);
 
         protected override void WriteData(Stream stream)
-            => NativeData.Write(stream);
+            => NativeData.BinarySerialize(stream);
 
         protected override PluginID GetExpectedIdentifier()
             => PluginID.NativeDataPLG;

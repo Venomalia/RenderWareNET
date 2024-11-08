@@ -26,8 +26,8 @@ namespace RenderWareNET.Plugins
         protected override void ReadData(Stream stream)
         {
             Properties = stream.Read<RWClump>();
-            FrameList.Read(stream);
-            GeometryList.Read(stream);
+            FrameList.BinaryDeserialize(stream);
+            GeometryList.BinaryDeserialize(stream);
 
             AtomicList.Clear();
             AtomicList.Capacity = Properties.AtomicCount;
@@ -35,19 +35,19 @@ namespace RenderWareNET.Plugins
             {
                 AtomicList.Add(new(stream));
             }
-            Extension.Read(stream);
+            Extension.BinaryDeserialize(stream);
         }
 
         protected override void WriteData(Stream stream)
         {
             stream.Write(Properties);
-            FrameList.Write(stream);
-            GeometryList.Write(stream);
+            FrameList.BinarySerialize(stream);
+            GeometryList.BinarySerialize(stream);
             foreach (Atomic atomic in AtomicList)
             {
-                atomic.Write(stream);
+                atomic.BinarySerialize(stream);
             }
-            Extension.Write(stream);
+            Extension.BinarySerialize(stream);
         }
 
         protected override PluginID GetExpectedIdentifier()

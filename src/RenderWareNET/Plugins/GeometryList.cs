@@ -38,7 +38,7 @@ namespace RenderWareNET.Plugins
 
             foreach (Geometry geometry in this)
             {
-                geometry.Write(stream);
+                geometry.BinarySerialize(stream);
             }
         }
 

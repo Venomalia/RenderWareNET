@@ -30,7 +30,7 @@ namespace RenderWareNET.Plugins
             {
                 Add(new(stream));
             }
-            Extension.Read(stream);
+            Extension.BinaryDeserialize(stream);
         }
 
         protected override void WriteData(Stream stream)
@@ -38,9 +38,9 @@ namespace RenderWareNET.Plugins
             stream.Write(new RWTextureDictionary(Header.Version, (ushort)Count, Platform));
             foreach (TextureNative texture in this)
             {
-                texture.Write(stream);
+                texture.BinarySerialize(stream);
             }
-            Extension.Write(stream);
+            Extension.BinarySerialize(stream);
         }
 
         protected override PluginID GetExpectedIdentifier()

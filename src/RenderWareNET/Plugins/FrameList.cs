@@ -12,7 +12,7 @@ namespace RenderWareNET.Plugins
 
         protected override void ReadData(Stream stream)
         {
-            Frames.Read(stream);
+            Frames.BinaryDeserialize(stream);
             Extensions.Clear();
             Extensions.Capacity = Frames.Count;
 
@@ -28,10 +28,10 @@ namespace RenderWareNET.Plugins
             {
                 throw new Exception($"{nameof(Frames)} and {nameof(Extensions)} must have the same number of entries.");
             }
-            Frames.Write(stream);
+            Frames.BinarySerialize(stream);
             foreach (Extension extension in Extensions)
             {
-                extension.Write(stream);
+                extension.BinarySerialize(stream);
             }
         }
 

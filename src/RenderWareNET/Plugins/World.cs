@@ -24,8 +24,8 @@ namespace RenderWareNET.Plugins
 
         protected override void ReadData(Stream stream)
         {
-            Properties.Read(stream);
-            Materials.Read(stream);
+            Properties.BinaryDeserialize(stream);
+            Materials.BinaryDeserialize(stream);
 
             PluginID next = stream.Peek<PluginID>();
             WorldChunk = next switch
@@ -34,15 +34,15 @@ namespace RenderWareNET.Plugins
                 PluginID.PlaneSector => new PlaneSector(stream),
                 _ => throw new NotImplementedException(),
             };
-            Extension.Read(stream);
+            Extension.BinaryDeserialize(stream);
         }
 
         protected override void WriteData(Stream stream)
         {
-            Properties.Write(stream);
-            Materials.Write(stream);
-            WorldChunk.Write(stream);
-            Extension.Write(stream);
+            Properties.BinarySerialize(stream);
+            Materials.BinarySerialize(stream);
+            WorldChunk.BinarySerialize(stream);
+            Extension.BinarySerialize(stream);
         }
 
         protected override PluginID GetExpectedIdentifier()
