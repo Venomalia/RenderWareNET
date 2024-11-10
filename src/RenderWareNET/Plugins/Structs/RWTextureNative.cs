@@ -185,8 +185,8 @@ namespace RenderWareNET.Plugins.Structs
             {
                 throw new NotImplementedException();
             }
-            stream.WriteString(TextureName, 32);
-            stream.WriteString(AlphaName, 32);
+            stream.WriteString(TextureName.AsSpan(), 32);
+            stream.WriteString(AlphaName.AsSpan(), 32);
             TextureAttributes attributes = TextureRasterFormatInfo.Build(Format, TLOTFormat, TLOTColors, Images > 1, Platform == TexturePlatformID.GC, UseAutoMipMaps);
             stream.Write(attributes, endian);
 

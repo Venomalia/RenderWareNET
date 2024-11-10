@@ -37,7 +37,7 @@ namespace RenderWareNET.Plugins.Structs
             => data = stream.ReadString((int)Header.SectionSize, 0);
 
         protected override void WriteData(Stream stream)
-            => stream.WriteString(data, (int)Header.SectionSize, 0);
+            => stream.WriteString(data.AsSpan(), (int)Header.SectionSize, 0);
 
         protected override PluginID GetExpectedIdentifier()
             => PluginID.String;

@@ -10,10 +10,7 @@ namespace RenderWareNET.Plugins.Structs
         public RWPluginHeader Header { get; set; }
         public RWTextureSampling Sampling;
 
-        public RWTexture() : this(new())
-        { }
-
-        public RWTexture(RWVersion version, RWTextureSampling sampling = new())
+        public RWTexture(RWVersion version = new(), RWTextureSampling sampling = new())
         {
             Header = new RWPluginHeader(PluginID.Struct, 4, version);
             Sampling = sampling;
