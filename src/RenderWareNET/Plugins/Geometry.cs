@@ -2,14 +2,15 @@
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Plugins.Structs;
 using RenderWareNET.Structs;
+using System.IO;
 
 namespace RenderWareNET.Plugins
 {
     public sealed class Geometry : RWPlugin
     {
-        public readonly RWGeometry Properties = new();
-        public readonly MaterialList Materials = new();
-        public readonly Extension Extension = new();
+        public readonly RWGeometry Properties = new RWGeometry();
+        public readonly MaterialList Materials = new MaterialList();
+        public readonly Extension Extension = new Extension();
 
         public Geometry()
         { }

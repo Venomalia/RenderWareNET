@@ -3,6 +3,8 @@ using RenderWareNET.Enums;
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Plugins.Structs;
 using RenderWareNET.Structs;
+using System.Collections.Generic;
+using System.IO;
 
 namespace RenderWareNET.Plugins
 {
@@ -28,7 +30,7 @@ namespace RenderWareNET.Plugins
             Capacity = properties.Count;
             for (int i = 0; i < properties.Count; i++)
             {
-                Add(new(stream));
+                Add(new Geometry(stream));
             }
         }
 

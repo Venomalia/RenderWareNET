@@ -1,8 +1,9 @@
-﻿using AuroraLib.Core.Buffers;
-using AuroraLib.Core.IO;
+﻿using AuroraLib.Core.IO;
 using RenderWareNET.Enums;
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Structs;
+using System.Collections.Generic;
+using System.IO;
 
 namespace RenderWareNET.Plugins.Structs
 {
@@ -11,8 +12,8 @@ namespace RenderWareNET.Plugins.Structs
         public bool UseMap;
         public BoundingBox Box;
 
-        public readonly List<Split> Splits = new();
-        public readonly List<ushort> Triangles = new();
+        public readonly List<Split> Splits = new List<Split>();
+        public readonly List<ushort> Triangles = new List<ushort>();
 
         public RWColTree()
         { }
@@ -32,25 +33,9 @@ namespace RenderWareNET.Plugins.Structs
 
             Splits.Clear();
             Triangles.Clear();
-            Splits.Capacity = numSplits;
-            Splits.Capacity = numTriangles;
 
-            using (SpanBuffer<Split> buffer = new(numSplits))
-            {
-                stream.Read<Split>(buffer);
-                foreach (Split item in buffer)
-                {
-                    Splits.Add(item);
-                }
-            }
-            using (SpanBuffer<ushort> buffer = new(numTriangles))
-            {
-                stream.Read<ushort>(buffer);
-                foreach (ushort item in buffer)
-                {
-                    Triangles.Add(item);
-                }
-            }
+            stream.ReadCollection(Splits, numSplits);
+            stream.ReadCollection(Triangles, numTriangles);
         }
 
         protected override void WriteData(Stream stream)
@@ -59,8 +44,8 @@ namespace RenderWareNET.Plugins.Structs
             stream.Write(Box);
             stream.Write(Triangles.Count);
             stream.Write(Splits.Count);
-            stream.Write(Splits);
-            stream.Write(Triangles);
+            stream.WriteCollection(Splits);
+            stream.WriteCollection(Triangles);
         }
 
         protected override PluginID GetExpectedIdentifier()

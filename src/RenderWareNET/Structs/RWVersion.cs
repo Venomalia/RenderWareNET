@@ -100,7 +100,7 @@
             => *(int*)&x;
 
         public static explicit operator RWVersion(ushort x)
-            => new(x << 16);
+            => new RWVersion(x << 16);
 
         public static unsafe implicit operator ushort(RWVersion x)
             => x._version;

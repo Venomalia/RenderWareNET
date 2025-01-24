@@ -3,15 +3,17 @@ using RenderWareNET.Enums;
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Plugins.Structs;
 using RenderWareNET.Structs;
+using System;
+using System.IO;
 
 namespace RenderWareNET.Plugins
 {
     public sealed class World : RWPlugin
     {
-        public readonly RWWorld Properties = new();
-        public readonly MaterialList Materials = new();
+        public readonly RWWorld Properties = new RWWorld();
+        public readonly MaterialList Materials = new MaterialList();
         public RWPlugin WorldChunk;
-        public readonly Extension Extension = new();
+        public readonly Extension Extension = new Extension();
 
         public World()
         { }

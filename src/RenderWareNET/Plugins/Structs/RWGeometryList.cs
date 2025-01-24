@@ -11,12 +11,9 @@ namespace RenderWareNET.Plugins.Structs
 
         public int Count;
 
-        public RWGeometryList() : this(new())
-        { }
-
-        public RWGeometryList(RWVersion version, int count = 0)
+        public RWGeometryList(RWVersion version = default, int count = 0)
         {
-            Header = new(PluginID.Struct, 4, version);
+            Header = new RWPluginHeader(PluginID.Struct, 4, version);
             Count = count;
         }
     }

@@ -1,10 +1,12 @@
-﻿using AuroraLib.Core;
-using AuroraLib.Core.Exceptions;
+﻿using AuroraLib.Core.Exceptions;
+using AuroraLib.Core.Format.Identifier;
 using AuroraLib.Core.IO;
 using RenderWareNET.Enums;
 using RenderWareNET.Interfaces;
 using RenderWareNET.Structs;
-using System.ComponentModel;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace RenderWareNET.Plugins.Base
 {
@@ -24,10 +26,10 @@ namespace RenderWareNET.Plugins.Base
             => BinaryDeserialize(stream);
 
         public RWPluginList(RWVersion version) : base()
-            => Header = new(GetExpectedIdentifier(), 4, version);
+            => Header = new RWPluginHeader(GetExpectedIdentifier(), 4, version);
 
         public RWPluginList(RWVersion version, IEnumerable<T> materials) : base(materials)
-            => Header = new(GetExpectedIdentifier(), (uint)(4 + 4 * Count), version);
+            => Header = new RWPluginHeader(GetExpectedIdentifier(), (uint)(4 + 4 * Count), version);
 
 
         /// <inheritdoc/>
@@ -36,7 +38,7 @@ namespace RenderWareNET.Plugins.Base
             Header = source.Read<RWPluginHeader>();
             if (Header.Identifier != GetExpectedIdentifier())
             {
-                throw new InvalidIdentifierException(new Identifier32((uint)GetExpectedIdentifier()), new Identifier32((uint)Header.Identifier));
+                throw new InvalidIdentifierException(new Identifier32((uint)GetExpectedIdentifier()).ToString(), new Identifier32((uint)Header.Identifier).ToString());
             }
             long sectionStart = source.Position;
             long sectionEnd = sectionStart + Header.SectionSize;
@@ -70,18 +72,6 @@ namespace RenderWareNET.Plugins.Base
             int sectionSize = (int)(dest.Position - sectionStart);
             dest.At(sectionStart - 8, s => s.Write(sectionSize));
         }
-
-        /// <inheritdoc/>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("deprecated, please use BinaryDeserialize instead.")]
-        public void Read(Stream source)
-            => BinaryDeserialize(source);
-
-        /// <inheritdoc/>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("deprecated, please use BinarySerialize instead.")]
-        public void Write(Stream dest)
-            => BinarySerialize(dest);
 
         /// <summary>
         /// Reads the specific section data from the given stream.

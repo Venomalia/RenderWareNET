@@ -3,13 +3,14 @@ using RenderWareNET.Enums;
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Plugins.Structs;
 using RenderWareNET.Structs;
+using System.IO;
 
 namespace RenderWareNET.Plugins
 {
     public sealed class Atomic : RWPlugin
     {
         public RWAtomic Properties;
-        public readonly Extension Extension = new();
+        public readonly Extension Extension = new Extension();
 
         public Atomic()
         { }
@@ -19,8 +20,8 @@ namespace RenderWareNET.Plugins
 
         public Atomic(RWVersion version) : base(version)
         {
-            Properties.Header = new(PluginID.Struct, 16, version);
-            Extension = new(version);
+            Properties.Header = new RWPluginHeader(PluginID.Struct, 16, version);
+            Extension = new Extension(version);
         }
 
         protected override void ReadData(Stream stream)

@@ -12,10 +12,7 @@ namespace RenderWareNET.Plugins.Structs
         public int LightCount;
         public int CameraCount;
 
-        public RWClump() : this(new(), 0, 0, 0)
-        { }
-
-        public RWClump(RWVersion version, int atomicCount, int lightCount, int cameraCount)
+        public RWClump(RWVersion version = default, int atomicCount = 0, int lightCount = 0, int cameraCount = 0)
         {
             Header = new RWPluginHeader(PluginID.Struct, 12, version);
             AtomicCount = atomicCount;

@@ -13,12 +13,9 @@ namespace RenderWareNET.Plugins.Structs
         public AtomicAttributes Flag;
         public int Unused;
 
-        public RWAtomic(RWVersion version) : this()
-            => Header = new(PluginID.Struct, 16, version);
-
-        public RWAtomic()
+        public RWAtomic(RWVersion version = default)
         {
-            Header = new(PluginID.Struct, 16);
+            Header = new RWPluginHeader(PluginID.Struct, 16, version);
             FrameIndex = GeometryIndex = Unused = 0;
             Flag = AtomicAttributes.None;
         }

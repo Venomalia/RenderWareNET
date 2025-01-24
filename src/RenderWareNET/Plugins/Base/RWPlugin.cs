@@ -1,10 +1,13 @@
-﻿using AuroraLib.Core;
-using AuroraLib.Core.Exceptions;
+﻿using AuroraLib.Core.Exceptions;
+using AuroraLib.Core.Format.Identifier;
 using AuroraLib.Core.IO;
 using RenderWareNET.Enums;
 using RenderWareNET.Interfaces;
 using RenderWareNET.Structs;
+using System;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 
 namespace RenderWareNET.Plugins.Base
 {
@@ -23,7 +26,7 @@ namespace RenderWareNET.Plugins.Base
             => BinaryDeserialize(source);
 
         public RWPlugin(RWVersion version) : base()
-            => Header = new(GetExpectedIdentifier(), 4, version);
+            => Header = new RWPluginHeader(GetExpectedIdentifier(), 4, version);
 
 
         /// <inheritdoc/>
@@ -32,14 +35,14 @@ namespace RenderWareNET.Plugins.Base
             Header = source.Read<RWPluginHeader>();
             if (Header.Identifier != GetExpectedIdentifier())
             {
-                throw new InvalidIdentifierException(new Identifier32((uint)GetExpectedIdentifier()), new Identifier32((uint)Header.Identifier));
+                throw new InvalidIdentifierException(new Identifier32((uint)GetExpectedIdentifier()).ToString(), new Identifier32((uint)Header.Identifier).ToString());
             }
             long sectionStart = source.Position;
             long sectionEnd = sectionStart + Header.SectionSize;
             ReadData(source);
             if (source.Position != sectionEnd)
             {
-                Console.Error.WriteLine($"This Plugin {Header.Identifier} was not read properly. Read until {source.Position}-{sectionEnd}");
+                Trace.WriteLine($"This Plugin {Header.Identifier} was not read properly. Read until {source.Position}-{sectionEnd}");
                 while (source.Position < sectionEnd)
                 {
                     RWPluginHeader test = source.Read<RWPluginHeader>();
@@ -48,7 +51,7 @@ namespace RenderWareNET.Plugins.Base
                         break;
                     }
 
-                    Console.Error.WriteLine($"Sub Plugin {test.Identifier} found, At {source.Position}, Size {test.SectionSize} was not read.");
+                    Trace.WriteLine($"Sub Plugin {test.Identifier} found, At {source.Position}, Size {test.SectionSize} was not read.");
                     source.Seek(test.SectionSize, SeekOrigin.Current);
                 }
 

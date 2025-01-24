@@ -3,15 +3,16 @@ using RenderWareNET.Enums;
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Plugins.Structs;
 using RenderWareNET.Structs;
+using System.IO;
 
 namespace RenderWareNET.Plugins
 {
     public sealed class Texture : RWPlugin
     {
         public RWTexture Properties;
-        public readonly RWString DiffuseName = new();
-        public readonly RWString AlphaName = new();
-        public readonly Extension Extension = new();
+        public readonly RWString DiffuseName = new RWString();
+        public readonly RWString AlphaName = new RWString();
+        public readonly Extension Extension = new Extension();
 
         public Texture() : base()
         { }

@@ -3,16 +3,18 @@ using RenderWareNET.Enums;
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Plugins.Structs;
 using RenderWareNET.Structs;
+using System.Collections.Generic;
+using System.IO;
 
 namespace RenderWareNET.Plugins
 {
     public sealed class Clump : RWPlugin
     {
         public RWClump Properties;
-        public readonly FrameList FrameList = new();
-        public readonly GeometryList GeometryList = new();
-        public readonly List<Atomic> AtomicList = new();
-        public readonly Extension Extension = new();
+        public readonly FrameList FrameList = new FrameList();
+        public readonly GeometryList GeometryList = new GeometryList();
+        public readonly List<Atomic> AtomicList = new List<Atomic>();
+        public readonly Extension Extension = new Extension();
 
         public Clump()
         { }
@@ -33,7 +35,7 @@ namespace RenderWareNET.Plugins
             AtomicList.Capacity = Properties.AtomicCount;
             for (int i = 0; i < Properties.AtomicCount; i++)
             {
-                AtomicList.Add(new(stream));
+                AtomicList.Add(new Atomic(stream));
             }
             Extension.BinaryDeserialize(stream);
         }

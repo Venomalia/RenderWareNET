@@ -2,13 +2,14 @@
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Plugins.Structs;
 using RenderWareNET.Structs;
+using System.IO;
 
 namespace RenderWareNET.Plugins
 {
     public sealed class TextureNative : RWPlugin
     {
-        public readonly RWTextureNative Properties = new();
-        public readonly Extension Extension = new();
+        public readonly RWTextureNative Properties = new RWTextureNative();
+        public readonly Extension Extension = new Extension();
 
         public TextureNative()
         { }

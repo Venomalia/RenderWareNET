@@ -2,6 +2,8 @@
 using RenderWareNET.Enums;
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Structs;
+using System.Collections.Generic;
+using System.IO;
 
 namespace RenderWareNET.Plugins
 {
@@ -46,7 +48,7 @@ namespace RenderWareNET.Plugins
 
             for (int i = 0; i < count; i++)
             {
-                Add(new(stream, IsNativeData));
+                Add(new Mesh(stream, IsNativeData));
             }
         }
 

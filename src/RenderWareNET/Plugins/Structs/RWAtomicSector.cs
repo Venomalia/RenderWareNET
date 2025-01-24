@@ -1,8 +1,12 @@
 ﻿using AuroraLib.Core.Buffers;
+using AuroraLib.Core.Collections;
 using AuroraLib.Core.IO;
 using RenderWareNET.Enums;
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Structs;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Numerics;
 
 namespace RenderWareNET.Plugins.Structs
@@ -15,11 +19,11 @@ namespace RenderWareNET.Plugins.Structs
         public int CollSectorPresent;
         public int Unused;
 
-        public readonly List<Vector3> Vertexs = new();
-        public readonly List<RGBA32> Colors = new();
-        public readonly List<RGBA32> Colors2 = new();
-        public readonly List<TexCoords> UVs = new();
-        public readonly List<Triangle> Triangles = new();
+        public readonly List<Vector3> Vertexs = new List<Vector3>();
+        public readonly List<RGBA32> Colors = new List<RGBA32>();
+        public readonly List<RGBA32> Colors2 = new List<RGBA32>();
+        public readonly List<TexCoords> UVs = new List<TexCoords>();
+        public readonly List<Triangle> Triangles = new List<Triangle>();
 
         public bool IsCollision = false;
         public bool IsShadow = false;
@@ -57,74 +61,46 @@ namespace RenderWareNET.Plugins.Structs
             UVs.Clear();
             Triangles.Clear();
 
-            Vertexs.Capacity = numVertices;
-            using (SpanBuffer<Vector3> buffer = new(numVertices))
-            {
-                stream.Read<Vector3>(buffer);
-                foreach (Vector3 item in buffer)
-                {
-                    Vertexs.Add(item);
-                }
-            }
+            stream.ReadCollection(Vertexs, numVertices);
 
             long trianglesPosition = startSectionPosition + Header.SectionSize - 8 * numTriangles;
             IsCollision = stream.Position == trianglesPosition;
-
             if (!IsCollision)
             {
-                Colors.Capacity = numVertices;
-                using (SpanBuffer<RGBA32> buffer = new(numVertices))
-                {
-                    stream.Read<RGBA32>(buffer);
-                    foreach (RGBA32 item in buffer)
-                    {
-                        Colors.Add(item);
-                    }
+                stream.ReadCollection(Colors, numVertices);
 
-                    //two color Arrays?
-                    long uvPosition = startSectionPosition + Header.SectionSize - 8 * numTriangles - 8 * numVertices;
-                    if (uvPosition - stream.Position == 4 * numVertices)
-                    {
-                        Colors2.Capacity = numVertices;
-                        stream.Read<RGBA32>(buffer);
-                        foreach (RGBA32 item in buffer)
-                        {
-                            Colors2.Add(item);
-                        }
-                    }
-                    stream.Seek(uvPosition, SeekOrigin.Begin);
-                }
-
-                UVs.Capacity = numVertices;
-                using (SpanBuffer<TexCoords> buffer = new(numVertices))
+                //two color Arrays?
+                long uvPosition = startSectionPosition + Header.SectionSize - 8 * numTriangles - 8 * numVertices;
+                if (uvPosition - stream.Position == 4 * numVertices)
                 {
-                    stream.Read<TexCoords>(buffer);
-                    foreach (TexCoords item in buffer)
-                    {
-                        UVs.Add(item);
-                    }
+                    stream.ReadCollection(Colors2, numVertices);
                 }
+                stream.Seek(uvPosition, SeekOrigin.Begin);
+                stream.ReadCollection(UVs, numVertices);
             }
 
             stream.Seek(trianglesPosition, SeekOrigin.Begin);
-
-            Triangles.Capacity = numTriangles;
-            using (SpanBuffer<Triangle> buffer = new(numTriangles))
+            stream.ReadCollection(Triangles, numTriangles);
+            if (IsShadow)
             {
-                stream.Read<Triangle>(buffer);
-                if (IsShadow)
-                {
-                    ReversTriangle(buffer);
-                }
-                foreach (Triangle item in buffer)
-                {
-                    Triangles.Add(item);
-                }
+                ReversTriangle(Triangles.UnsafeAsSpan());
             }
         }
 
         protected override void WriteData(Stream stream)
         {
+            if (!IsCollision)
+            {
+                if (Triangles.Count != Colors.Count)
+                    throw new InvalidOperationException("Triangles.Count and Colors.Count must match.");
+
+                if (Triangles.Count != UVs.Count)
+                    throw new InvalidOperationException("Triangles.Count and UVs.Count must match.");
+
+                if (Colors2.Count != 0 && Triangles.Count != Colors2.Count)
+                    throw new InvalidOperationException("If Colors2 is used, its count must match Triangles.Count.");
+            }
+
             stream.Write(MatListWindowBase);
             stream.Write(Triangles.Count);
             stream.Write(Vertexs.Count);
@@ -132,23 +108,24 @@ namespace RenderWareNET.Plugins.Structs
             stream.Write(CollSectorPresent);
             stream.Write(Unused);
 
-            stream.Write(Vertexs);
+            stream.WriteCollection(Vertexs);
             if (!IsCollision)
             {
-                stream.Write(Colors);
-                stream.Write(Colors2);
-                stream.Write(UVs);
+                stream.WriteCollection(Colors);
+                if (Colors2.Count != 0)
+                    stream.WriteCollection(Colors2);
+                stream.WriteCollection(UVs);
             }
 
             if (IsShadow)
             {
-                using SpanBuffer<Triangle> Buffer = new(Triangles);
+                using SpanBuffer<Triangle> Buffer = new SpanBuffer<Triangle>(Triangles.UnsafeAsSpan());
                 ReversTriangle(Buffer);
                 stream.Write<Triangle>(Buffer);
             }
             else
             {
-                stream.Write(Triangles);
+                stream.WriteCollection(Triangles);
             }
         }
 

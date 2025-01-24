@@ -8,7 +8,7 @@ namespace RenderWareNET.Structs
         public RWTextureWrap WrapMode;
         public ushort UseMipLevels;
 
-        public RWTextureSampling(RWTextureFilterMode filterMode = RWTextureFilterMode.Nearest, RWTextureWrap wrapMode = new(), ushort useMipLevels = 0)
+        public RWTextureSampling(RWTextureFilterMode filterMode = RWTextureFilterMode.Nearest, RWTextureWrap wrapMode = default, ushort useMipLevels = 0)
         {
             FilterMode = filterMode;
             WrapMode = wrapMode;

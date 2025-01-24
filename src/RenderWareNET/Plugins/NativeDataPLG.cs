@@ -2,12 +2,13 @@
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Plugins.Structs;
 using RenderWareNET.Structs;
+using System.IO;
 
 namespace RenderWareNET.Plugins
 {
     public sealed class NativeDataPLG : RWPlugin
     {
-        public readonly RWNativeData NativeData = new();
+        public readonly RWNativeData NativeData = new RWNativeData();
 
         public NativeDataPLG()
         { }

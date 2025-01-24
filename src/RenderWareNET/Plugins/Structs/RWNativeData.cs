@@ -2,6 +2,8 @@
 using RenderWareNET.Enums;
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Structs;
+using System;
+using System.IO;
 
 namespace RenderWareNET.Plugins.Structs
 {

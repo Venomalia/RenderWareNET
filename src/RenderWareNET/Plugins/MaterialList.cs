@@ -1,13 +1,15 @@
 ﻿using RenderWareNET.Enums;
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Plugins.Structs;
+using System.Collections.Generic;
+using System.IO;
 
 namespace RenderWareNET.Plugins
 {
     public sealed class MaterialList : RWPlugin
     {
-        public readonly RWMaterialList List = new();
-        public readonly List<Material> Materials = new();
+        public readonly RWMaterialList List = new RWMaterialList();
+        public readonly List<Material> Materials = new List<Material>();
 
         protected override void ReadData(Stream stream)
         {

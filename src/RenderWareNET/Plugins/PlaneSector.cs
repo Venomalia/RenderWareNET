@@ -3,6 +3,7 @@ using RenderWareNET.Enums;
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Plugins.Structs;
 using RenderWareNET.Structs;
+using System.IO;
 
 namespace RenderWareNET.Plugins
 {
@@ -45,8 +46,15 @@ namespace RenderWareNET.Plugins
         {
             Properties = stream.Read<RWPlane>();
 
-            left = Properties.LeftIsAtomic ? new AtomicSector(stream) : new PlaneSector(stream);
-            right = Properties.RightIsAtomic ? new AtomicSector(stream) : new PlaneSector(stream);
+            if (Properties.LeftIsAtomic)
+                left = new AtomicSector(stream);
+            else
+                left = new PlaneSector(stream);
+
+            if (Properties.RightIsAtomic)
+                right = new AtomicSector(stream);
+            else
+                right = new PlaneSector(stream);
         }
 
         protected override void WriteData(Stream stream)

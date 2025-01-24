@@ -2,11 +2,11 @@
 
   <PropertyGroup>
 	 <TargetFrameworks>net8.0;net6.0;netstandard2.0;net472;</TargetFrameworks>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <ImplicitUsings>false</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Title>RenderWareNET</Title>
-	<Version>0.6.4.0</Version>
+	<Version>0.6.5.0</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
@@ -33,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AuroraLib.Core" Version="1.4.2.5" />
+    <PackageReference Include="AuroraLib.Core" Version="1.6.1" />
   </ItemGroup>
 
 	<PropertyGroup>
@@ -41,7 +41,7 @@
 	</PropertyGroup>
 	
 	<PropertyGroup Condition="$(NETFrameworks.Contains('|$(TargetFramework)|'))">
-		<LangVersion>10.0</LangVersion>
+		<LangVersion>8.0</LangVersion>
 	</PropertyGroup>
 	
 </Project>

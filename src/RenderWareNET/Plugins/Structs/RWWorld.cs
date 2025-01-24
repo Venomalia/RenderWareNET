@@ -2,6 +2,7 @@
 using RenderWareNET.Enums;
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Structs;
+using System.IO;
 using System.Numerics;
 
 namespace RenderWareNET.Plugins.Structs
@@ -20,7 +21,7 @@ namespace RenderWareNET.Plugins.Structs
         public BoundingBox Box;
 
         public RWWorld()
-            => Header = new(PluginID.Struct, 0x40);
+            => Header = new RWPluginHeader(PluginID.Struct, 0x40);
 
         public RWWorld(Stream stream) : base(stream)
         { }
@@ -32,7 +33,7 @@ namespace RenderWareNET.Plugins.Structs
             if (Header.SectionSize == 0x34)
             {
                 Vector3 Point = stream.Read<Vector3>();
-                Box = new(Point, Point);
+                Box = new BoundingBox(Point, Point);
             }
             NumTriangles = stream.Read<uint>();
             NumVertices = stream.Read<uint>();

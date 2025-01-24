@@ -1,6 +1,7 @@
 ﻿using AuroraLib.Core.IO;
 using RenderWareNET.Enums;
 using RenderWareNET.Structs;
+using System.IO;
 using System.Runtime.CompilerServices;
 
 namespace RenderWareNET
@@ -15,7 +16,7 @@ namespace RenderWareNET
         /// <returns>True if the stream represents a RenderWare plugin; otherwise, false.</returns>
         public static bool IsRWPlugin(this Stream stream, out PluginID pluginID)
         {
-            RWPluginHeader header = stream.At(0,s => s.Read<RWPluginHeader>());
+            RWPluginHeader header = stream.At(0, s => s.Read<RWPluginHeader>());
             pluginID = header.Identifier;
             return header.Version.Version == 3 && header.Version.Major < 10 && header.SectionSize == stream.Length - Unsafe.SizeOf<RWPluginHeader>();
         }

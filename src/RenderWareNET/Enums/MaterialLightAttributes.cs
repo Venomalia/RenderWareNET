@@ -1,4 +1,6 @@
-﻿namespace RenderWareNET.Enums
+﻿using System;
+
+namespace RenderWareNET.Enums
 {
     [Flags]
     public enum MaterialLightAttributes

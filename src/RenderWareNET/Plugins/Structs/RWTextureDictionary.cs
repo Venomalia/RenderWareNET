@@ -11,14 +11,12 @@ namespace RenderWareNET.Plugins.Structs
         public ushort TextureCount;
         public RWPlatformID Platform;
 
-        public RWTextureDictionary(RWVersion version, ushort textureCount = 0, RWPlatformID platform = RWPlatformID.None)
+        public RWTextureDictionary(RWVersion version = default, ushort textureCount = 0, RWPlatformID platform = RWPlatformID.None)
         {
             Header = new RWPluginHeader(PluginID.Struct, 4, version);
             TextureCount = textureCount;
             Platform = version.Major > 5 ? platform : RWPlatformID.None;
         }
 
-        public RWTextureDictionary() : this(new())
-        { }
     }
 }

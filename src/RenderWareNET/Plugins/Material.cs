@@ -3,14 +3,15 @@ using RenderWareNET.Enums;
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Plugins.Structs;
 using RenderWareNET.Structs;
+using System.IO;
 
 namespace RenderWareNET.Plugins
 {
     public sealed class Material : RWPlugin
     {
         public RWMaterial Properties;
-        public readonly Texture Texture = new();
-        public readonly Extension Extension = new();
+        public readonly Texture Texture = new Texture();
+        public readonly Extension Extension = new Extension();
 
         public Material()
         { }

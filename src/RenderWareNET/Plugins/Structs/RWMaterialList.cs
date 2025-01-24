@@ -1,8 +1,9 @@
-﻿using AuroraLib.Core.Buffers;
-using AuroraLib.Core.IO;
+﻿using AuroraLib.Core.IO;
 using RenderWareNET.Enums;
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Structs;
+using System.Collections.Generic;
+using System.IO;
 
 namespace RenderWareNET.Plugins.Structs
 {
@@ -23,19 +24,13 @@ namespace RenderWareNET.Plugins.Structs
         protected override void ReadData(Stream stream)
         {
             Capacity = stream.Read<int>();
-
-            using SpanBuffer<int> buffer = new(Capacity);
-            stream.Read<int>(buffer);
-            foreach (int item in buffer)
-            {
-                Add(item);
-            }
+            stream.ReadCollection(this, Capacity);
         }
 
         protected override void WriteData(Stream stream)
         {
             stream.Write(Count);
-            stream.Write(this);
+            stream.WriteCollection(this);
         }
 
         protected override PluginID GetExpectedIdentifier()

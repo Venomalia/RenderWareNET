@@ -1,6 +1,7 @@
 ﻿using AuroraLib.Core.IO;
 using RenderWareNET.Enums;
 using RenderWareNET.Plugins;
+using System.IO;
 
 namespace RenderWareNET.MaterialEffects
 {
@@ -8,7 +9,7 @@ namespace RenderWareNET.MaterialEffects
     {
         public BlendFactorType SourceBlendMode;
         public BlendFactorType DestBlendMode;
-        public bool HasTexture => Texture is not null;
+        public bool HasTexture => !(Texture is null);
         public Texture? Texture;
 
         public MEDualTexture()

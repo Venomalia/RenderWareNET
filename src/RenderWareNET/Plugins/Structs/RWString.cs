@@ -2,6 +2,8 @@
 using RenderWareNET.Enums;
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Structs;
+using System;
+using System.IO;
 
 namespace RenderWareNET.Plugins.Structs
 {
@@ -13,7 +15,7 @@ namespace RenderWareNET.Plugins.Structs
             set
             {
                 data = value ?? string.Empty;
-                Header = new(PluginID.String, (uint)StreamEx.AlignPosition(data.Length, 4), Header.Version);
+                Header = new RWPluginHeader(PluginID.String, (uint)StreamEx.AlignPosition(data.Length, 4), Header.Version);
             }
         }
         private string data = string.Empty;
@@ -43,6 +45,6 @@ namespace RenderWareNET.Plugins.Structs
             => PluginID.String;
 
         public static implicit operator string(RWString x) => x.Value;
-        public static explicit operator RWString(string x) => new(x);
+        public static explicit operator RWString(string x) => new RWString(x);
     }
 }

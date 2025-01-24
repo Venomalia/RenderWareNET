@@ -1,5 +1,6 @@
-﻿using AuroraLib.Core.Interfaces;
-using AuroraLib.Core.IO;
+﻿using AuroraLib.Core.IO;
+using System;
+using System.IO;
 using System.Numerics;
 
 namespace RenderWareNET.Structs

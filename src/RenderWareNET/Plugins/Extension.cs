@@ -3,12 +3,14 @@ using RenderWareNET.Enums;
 using RenderWareNET.Interfaces;
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Structs;
+using System.Collections.Generic;
+using System.IO;
 
 namespace RenderWareNET.Plugins
 {
     public sealed class Extension : RWPlugin
     {
-        public List<IRWSectionAccess> Sections = new(32);
+        public List<IRWSectionAccess> Sections = new List<IRWSectionAccess>(32);
 
         public Extension()
         { }

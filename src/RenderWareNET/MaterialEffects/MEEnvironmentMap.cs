@@ -1,5 +1,6 @@
 ﻿using AuroraLib.Core.IO;
 using RenderWareNET.Plugins;
+using System.IO;
 
 namespace RenderWareNET.MaterialEffects
 {
@@ -7,7 +8,7 @@ namespace RenderWareNET.MaterialEffects
     {
         public float ReflectionCoefficient;
         public bool UseFrameBufferAlphaChannel;
-        public bool HasEnvironmentMap => EnvironmentMap is not null;
+        public bool HasEnvironmentMap => !(EnvironmentMap is null);
         public Texture? EnvironmentMap;
 
         public MEEnvironmentMap()

@@ -3,6 +3,9 @@ using AuroraLib.Core.IO;
 using RenderWareNET.Enums;
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Structs;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Numerics;
 
 namespace RenderWareNET.Plugins.Structs
@@ -21,7 +24,7 @@ namespace RenderWareNET.Plugins.Structs
         public Vector2[] TextCoords = Array.Empty<Vector2>();
         public Vector2[] TextCoords2 = Array.Empty<Vector2>();
         public Triangle[] Triangles = Array.Empty<Triangle>();
-        public readonly List<MorphTarget> MorphTargets = new();
+        public readonly List<MorphTarget> MorphTargets = new List<MorphTarget>();
 
         public RWGeometry() : base()
         { }
@@ -72,7 +75,7 @@ namespace RenderWareNET.Plugins.Structs
             MorphTargets.Capacity = numMorphTargets;
             for (int i = 0; i < numMorphTargets; i++)
             {
-                MorphTargets[i] = new(stream, NumVertices);
+                MorphTargets[i] = new MorphTarget(stream, NumVertices);
             }
         }
 
@@ -109,7 +112,7 @@ namespace RenderWareNET.Plugins.Structs
                 stream.Write<Vector2>(TextCoords2);
             }
 
-            using SpanBuffer<Triangle> Buffer = new(Triangles);
+            using SpanBuffer<Triangle> Buffer = new SpanBuffer<Triangle>(Triangles);
             ReversTriangle(Buffer);
             stream.Write<Triangle>(Triangles);
 

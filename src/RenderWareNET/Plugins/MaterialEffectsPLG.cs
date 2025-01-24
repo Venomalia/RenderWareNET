@@ -1,6 +1,7 @@
 ﻿using AuroraLib.Core.IO;
 using RenderWareNET.Enums;
 using RenderWareNET.Plugins.Base;
+using System.IO;
 
 namespace RenderWareNET.Plugins
 {
@@ -17,7 +18,6 @@ namespace RenderWareNET.Plugins
         protected override void WriteData(Stream stream)
         {
             stream.Write(EffectType);
-            throw new NotImplementedException();
         }
 
         protected override PluginID GetExpectedIdentifier()

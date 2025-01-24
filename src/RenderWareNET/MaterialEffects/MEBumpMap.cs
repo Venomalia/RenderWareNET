@@ -1,13 +1,14 @@
 ﻿using AuroraLib.Core.IO;
 using RenderWareNET.Plugins;
+using System.IO;
 
 namespace RenderWareNET.MaterialEffects
 {
     public class MEBumpMap : MaterialEffect
     {
         public float Intensity;
-        public bool HasBumpMap => BumpMap is not null;
-        public bool HasHeightMap => HeightMap is not null;
+        public bool HasBumpMap => !(BumpMap is null);
+        public bool HasHeightMap => !(HeightMap is null);
         public Texture? BumpMap;
         public Texture? HeightMap;
 

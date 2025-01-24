@@ -2,12 +2,13 @@
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Plugins.Structs;
 using RenderWareNET.Structs;
+using System.IO;
 
 namespace RenderWareNET.Plugins
 {
     public sealed class ColTree : RWPlugin
     {
-        public RWColTree Properties = new();
+        public RWColTree Properties = new RWColTree();
 
         public ColTree()
         { }

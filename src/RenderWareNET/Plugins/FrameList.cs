@@ -1,14 +1,17 @@
 ﻿using RenderWareNET.Enums;
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Plugins.Structs;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace RenderWareNET.Plugins
 {
     public sealed class FrameList : RWPlugin
     {
-        public readonly RWFrameList Frames = new();
+        public readonly RWFrameList Frames = new RWFrameList();
 
-        public readonly List<Extension> Extensions = new();
+        public readonly List<Extension> Extensions = new List<Extension>();
 
         protected override void ReadData(Stream stream)
         {
@@ -18,7 +21,7 @@ namespace RenderWareNET.Plugins
 
             for (int i = 0; i < Frames.Count; i++)
             {
-                Extensions.Add(new(stream));
+                Extensions.Add(new Extension(stream));
             }
         }
 
@@ -26,7 +29,7 @@ namespace RenderWareNET.Plugins
         {
             if (Frames.Count != Extensions.Count)
             {
-                throw new Exception($"{nameof(Frames)} and {nameof(Extensions)} must have the same number of entries.");
+                throw new InvalidOperationException($"{nameof(Frames)} and {nameof(Extensions)} must have the same number of entries.");
             }
             Frames.BinarySerialize(stream);
             foreach (Extension extension in Extensions)

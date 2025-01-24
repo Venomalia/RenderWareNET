@@ -1,5 +1,6 @@
-﻿using AuroraLib.Core.Buffers;
-using AuroraLib.Core.IO;
+﻿using AuroraLib.Core.IO;
+using System.Collections.Generic;
+using System.IO;
 
 namespace RenderWareNET.Structs
 {
@@ -15,12 +16,7 @@ namespace RenderWareNET.Structs
 
             if (!IsNative)
             {
-                using SpanBuffer<int> buffer = new(Capacity);
-                stream.Read<int>(buffer);
-                foreach (int item in buffer)
-                {
-                    Add(item);
-                }
+                stream.ReadCollection(this, Capacity);
             }
         }
 
@@ -28,7 +24,8 @@ namespace RenderWareNET.Structs
         {
             stream.Write(Count);
             stream.Write(MaterialIndex);
-            stream.Write(this);
+            if (this.Count != 0)
+                stream.WriteCollection(this);
         }
     }
 }

@@ -2,13 +2,14 @@
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Plugins.Structs;
 using RenderWareNET.Structs;
+using System.IO;
 
 namespace RenderWareNET.Plugins
 {
     public sealed class AtomicSector : RWPlugin
     {
-        public readonly RWAtomicSector Properties = new();
-        public readonly Extension Extension = new();
+        public readonly RWAtomicSector Properties = new RWAtomicSector();
+        public readonly Extension Extension = new Extension();
 
         public AtomicSector()
         { }

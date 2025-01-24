@@ -3,13 +3,14 @@ using RenderWareNET.Enums;
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Plugins.Structs;
 using RenderWareNET.Structs;
+using System.IO;
 
 namespace RenderWareNET.Plugins
 {
     public sealed class TextureDictionary : RWPluginList<TextureNative>
     {
         public RWPlatformID Platform;
-        public readonly Extension Extension = new();
+        public readonly Extension Extension = new Extension();
 
         public TextureDictionary()
         { }
@@ -28,7 +29,7 @@ namespace RenderWareNET.Plugins
 
             for (int i = 0; i < properties.TextureCount; i++)
             {
-                Add(new(stream));
+                Add(new TextureNative(stream));
             }
             Extension.BinaryDeserialize(stream);
         }

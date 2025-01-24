@@ -1,4 +1,6 @@
-﻿namespace RenderWareNET.MaterialEffects
+﻿using System.IO;
+
+namespace RenderWareNET.MaterialEffects
 {
     public abstract class MaterialEffect
     {
