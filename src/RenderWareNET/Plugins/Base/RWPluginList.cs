@@ -1,5 +1,4 @@
 ﻿using AuroraLib.Core.Exceptions;
-using AuroraLib.Core.Format.Identifier;
 using AuroraLib.Core.IO;
 using RenderWareNET.Enums;
 using RenderWareNET.Interfaces;
@@ -38,7 +37,7 @@ namespace RenderWareNET.Plugins.Base
             Header = source.Read<RWPluginHeader>();
             if (Header.Identifier != GetExpectedIdentifier())
             {
-                throw new InvalidIdentifierException(new Identifier32((uint)GetExpectedIdentifier()).ToString(), new Identifier32((uint)Header.Identifier).ToString());
+                throw new InvalidIdentifierException(GetExpectedIdentifier().ToString(), Header.Identifier.ToString());
             }
             long sectionStart = source.Position;
             long sectionEnd = sectionStart + Header.SectionSize;

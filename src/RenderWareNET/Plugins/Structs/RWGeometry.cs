@@ -4,6 +4,7 @@ using RenderWareNET.Enums;
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Structs;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -112,9 +113,18 @@ namespace RenderWareNET.Plugins.Structs
                 stream.Write<Vector2>(TextCoords2);
             }
 
-            using SpanBuffer<Triangle> Buffer = new SpanBuffer<Triangle>(Triangles);
-            ReversTriangle(Buffer);
-            stream.Write<Triangle>(Triangles);
+            Triangle[] buffer  = ArrayPool<Triangle>.Shared.Rent(Triangles.Length);
+            try
+            {
+                Span<Triangle> bufferSpan = buffer.AsSpan(0, Triangles.Length);
+                Triangles.AsSpan().CopyTo(bufferSpan);
+                ReversTriangle(bufferSpan);
+                stream.Write<Triangle>(bufferSpan);
+            }
+            finally
+            {
+                ArrayPool<Triangle>.Shared.Return(buffer);
+            }
 
             for (int i = 0; i < MorphTargets.Count; i++)
             {

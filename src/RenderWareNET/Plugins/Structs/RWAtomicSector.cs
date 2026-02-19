@@ -5,6 +5,7 @@ using RenderWareNET.Enums;
 using RenderWareNET.Plugins.Base;
 using RenderWareNET.Structs;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -48,12 +49,12 @@ namespace RenderWareNET.Plugins.Structs
         {
             long startSectionPosition = stream.Position;
 
-            MatListWindowBase = stream.Read<int>();
-            int numTriangles = stream.Read<int>();
-            int numVertices = stream.Read<int>();
+            MatListWindowBase = stream.ReadInt32LittleEndian();
+            int numTriangles = stream.ReadInt32LittleEndian();
+            int numVertices = stream.ReadInt32LittleEndian();
             Box = stream.Read<BoundingBox>();
-            CollSectorPresent = stream.Read<int>();
-            Unused = stream.Read<int>();
+            CollSectorPresent = stream.ReadInt32LittleEndian();
+            Unused = stream.ReadInt32LittleEndian();
 
             Vertexs.Clear();
             Colors.Clear();
@@ -119,9 +120,18 @@ namespace RenderWareNET.Plugins.Structs
 
             if (IsShadow)
             {
-                using SpanBuffer<Triangle> Buffer = new SpanBuffer<Triangle>(Triangles.UnsafeAsSpan());
-                ReversTriangle(Buffer);
-                stream.Write<Triangle>(Buffer);
+                Triangle[] buffer = ArrayPool<Triangle>.Shared.Rent(Triangles.Count);
+                try
+                {
+                    Span<Triangle> bufferSpan = buffer.AsSpan(0, Triangles.Count);
+                    Triangles.UnsafeAsSpan().CopyTo(bufferSpan);
+                    ReversTriangle(bufferSpan);
+                    stream.Write<Triangle>(bufferSpan);
+                }
+                finally
+                {
+                    ArrayPool<Triangle>.Shared.Return(buffer);
+                }
             }
             else
             {

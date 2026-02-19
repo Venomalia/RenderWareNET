@@ -62,13 +62,13 @@ namespace RenderWareNET.Plugins.Structs
         {
             Platform = stream.Read<TexturePlatformID>();
             Endian endian = Platform == TexturePlatformID.GC ? Endian.Big : Endian.Little;
-            SamplingSettings = stream.Read<int>(endian);
+            SamplingSettings = stream.ReadInt32BigEndian();
             if (Platform == TexturePlatformID.GC)
             {
-                gcnUnknown1 = stream.Read<int>(Endian.Big);
-                gcnUnknown2 = stream.Read<int>(Endian.Big);
-                gcnUnknown3 = stream.Read<int>(Endian.Big);
-                gcnUnknown4 = stream.Read<int>(Endian.Big);
+                gcnUnknown1 = stream.ReadInt32BigEndian();
+                gcnUnknown2 = stream.ReadInt32BigEndian();
+                gcnUnknown3 = stream.ReadInt32BigEndian();
+                gcnUnknown4 = stream.ReadInt32BigEndian();
             }
             else if (Platform == TexturePlatformID.PS2 || Platform == TexturePlatformID.PSP)
             {
@@ -77,24 +77,24 @@ namespace RenderWareNET.Plugins.Structs
 
             TextureName = stream.ReadString(32);
             AlphaName = stream.ReadString(32);
-            TextureAttributes attributes = stream.Read<TextureAttributes>(endian);
+            TextureAttributes attributes = (TextureAttributes)stream.ReadInt32(endian);
             UseAutoMipMaps = ((int)attributes & (int)TextureAttributes.AutoMipMaps) != 0;
             if (((int)attributes & (int)TextureAttributes.Native) == 0)
             {
                 if (Platform == TexturePlatformID.D3D9)
                 {
-                    Format = stream.Read<FourCCType>(endian);
+                    Format = (FourCCType) stream.ReadInt32(endian);
                     HasAlpha = true;
                 }
                 else
                 {
                     Format = attributes.ToFourCC(Platform == TexturePlatformID.GC);
-                    HasAlpha = stream.Read<int>(endian) != 0;
+                    HasAlpha = stream.ReadInt32(endian) != 0;
                 }
             }
             TLOTFormat = attributes.IsPaletteFormat() ? attributes.GetPixelFormat().ToFourCC(Platform == TexturePlatformID.GC) : FourCCType.None;
-            Width = stream.Read<ushort>(endian);
-            Height = stream.Read<ushort>(endian);
+            Width = stream.ReadUInt16(endian);
+            Height = stream.ReadUInt16(endian);
 
             byte bpp = stream.ReadUInt8();
             Images = stream.ReadUInt8();
@@ -106,7 +106,7 @@ namespace RenderWareNET.Plugins.Structs
                 Format = (FourCCType)format;
                 // SubFormat is GC TLOT format
                 // -1 none, 0 IA8, 1 RGB565, 2 RGB5A3
-                Unknown5 = stream.Read<int>(endian);
+                Unknown5 = stream.ReadInt32(endian);
             }
             else
             {
@@ -141,7 +141,7 @@ namespace RenderWareNET.Plugins.Structs
             int imagesize = 0;
             if (Platform == TexturePlatformID.Xbox)
             {
-                imagesize = stream.Read<int>(endian);
+                imagesize = stream.ReadInt32(endian);
             }
 
             int PaletteSize = attributes.GetPaletteByteSize();
@@ -151,7 +151,7 @@ namespace RenderWareNET.Plugins.Structs
 
             if (Platform != TexturePlatformID.Xbox)
             {
-                imagesize = stream.Read<int>(endian);
+                imagesize = stream.ReadInt32(endian);
             }
             ImageData = new byte[imagesize];
             stream.Read(ImageData);
@@ -163,9 +163,9 @@ namespace RenderWareNET.Plugins.Structs
             AlphaName = new RWString(stream).Value;
             RWPluginHeader Header = stream.Read<RWPluginHeader>();
             RWPluginHeader ImageHeader = stream.Read<RWPluginHeader>();
-            Width = (ushort)stream.Read<int>();
-            Height = (ushort)stream.Read<int>();
-            int bpp = stream.Read<int>();
+            Width = (ushort)stream.ReadInt32LittleEndian();
+            Height = (ushort)stream.ReadInt32LittleEndian();
+            int bpp = stream.ReadInt32LittleEndian();
             TextureAttributes attributes = stream.Read<TextureAttributes>();
             UseAutoMipMaps = ((int)attributes & (int)TextureAttributes.AutoMipMaps) != 0;
             throw new NotImplementedException();
@@ -190,7 +190,7 @@ namespace RenderWareNET.Plugins.Structs
             stream.WriteString(TextureName.AsSpan(), 32);
             stream.WriteString(AlphaName.AsSpan(), 32);
             TextureAttributes attributes = TextureRasterFormatInfo.Build(Format, TLOTFormat, TLOTColors, Images > 1, Platform == TexturePlatformID.GC, UseAutoMipMaps);
-            stream.Write(attributes, endian);
+            stream.Write((int)attributes, endian);
 
             if (((int)attributes & (int)TextureAttributes.Native) == 0)
             {
